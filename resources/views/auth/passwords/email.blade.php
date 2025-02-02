@@ -5,9 +5,6 @@
         <div class="container ">
             <div class="row justify-content-center ">
                 <div class="col-10 card rounded-0 mt-5 p-lg-5 p-3">
-                    <div class="text-center col-lg-6 col-10 m-auto">
-                        <img class="w-50 mb-3" src="{{ asset('img/forgot-password.svg') }}" alt="forgot-password">
-                    </div>
                     <div class="container">
                         <h2 class="text-center mb-3">Reset Password</h2>
                         <p class="text-center ">

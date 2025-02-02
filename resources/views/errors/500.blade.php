@@ -1,7 +1,7 @@
 @extends('auth.layout.app')
 @section('title', 'Error: 500')
 @section('content')
-    <div class="bg-danger vh-100">
+    <div class="bg-dark vh-100">
         <div class="container ">
             <div class="row justify-content-center ">
                 <div class="col-10 card rounded-4 mt-5 p-lg-5 p-3">

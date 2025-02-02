@@ -1,10 +1,10 @@
 @extends('auth.layout.app')
 @section('title', 'Error: 403')
 @section('content')
-    <div class="bg-danger vh-100">
+    <div class="bg-dark vh-100">
         <div class="container ">
             <div class="row justify-content-center ">
-                <div class="col-10 card rounded-4 mt-5 p-lg-5 p-3">
+                <div class="col-10 card rounded-0 mt-5 p-lg-5 p-3">
                     <div class="text-center col-lg-6 col-10 m-auto">
                         <img class="w-50 mb-3" src="{{ asset('img/403.svg') }}" alt="reset-password">
                     </div>
