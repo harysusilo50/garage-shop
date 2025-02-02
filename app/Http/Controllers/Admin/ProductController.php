@@ -44,8 +44,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'brand_id' => 'required',
-            'category_id' => 'required',
             'name' => 'required',
             'code' => 'required|unique:products',
             'stock' => 'required',
@@ -56,8 +54,6 @@ class ProductController extends Controller
             'image' => 'required',
             'image_gallery' => 'required',
         ], [
-            'brand_id.required' => 'Kolom Nama Brand harus diisi!',
-            'category_id.required' => 'Kolom Nama Kategori harus diisi!',
             'name.required' => 'Kolom Nama Produk harus diisi!',
             'code.required' => 'Kolom Kode Produk harus diisi!',
             'code.unique' => 'Kode Produk sudah ada',
@@ -72,8 +68,6 @@ class ProductController extends Controller
         DB::beginTransaction();
         try {
             $product = new Product();
-            $product->brand_id = $request->brand_id;
-            $product->category_id = $request->category_id;
             $product->name = $request->name;
             $product->code = $request->code;
             $product->stock = $request->stock;
@@ -171,16 +165,12 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'brand_id' => 'required',
-            'category_id' => 'required',
             'name' => 'required',
             'code' => 'required',
             'price' => 'required',
             'description_short' => 'required',
             'description_long' => 'required',
         ], [
-            'brand_id.required' => 'Kolom Nama Brand harus diisi!',
-            'category_id.required' => 'Kolom Nama Kategori harus diisi!',
             'name.required' => 'Kolom Nama Produk harus diisi!',
             'code.required' => 'Kolom Kode Produk harus diisi!',
             'price.required' => 'Kolom Harga Produk harus diisi!',
@@ -190,8 +180,6 @@ class ProductController extends Controller
         DB::beginTransaction();
         try {
             $product = Product::lockForUpdate()->findOrFail($id);
-            $product->brand_id = $request->brand_id;
-            $product->category_id = $request->category_id;
             $product->name = $request->name;
             $product->price = $request->price;
             $product->description_long = $request->description_long;
@@ -280,11 +268,11 @@ class ProductController extends Controller
             $data->delete();
             DB::commit();
             if ($data) {
-                Alert::success('Success', 'Berhasil Menghapus Data Transaksi!');
+                Alert::success('Success', 'Berhasil Menghapus Data Produk!');
                 return redirect()->route('product.index');
             } else {
                 DB::rollBack();
-                Alert::success('Error', 'Gagal Menghapus Data Transaksi!');
+                Alert::success('Error', 'Gagal Menghapus Data Produk!');
                 return redirect()->back();
             }
         } catch (\Throwable $th) {

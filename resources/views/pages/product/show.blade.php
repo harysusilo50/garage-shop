@@ -10,17 +10,6 @@
                     <i class="fa fa-chevron-right text-muted" aria-hidden="true"></i>
                 </small>
             </span>
-            <a class="btn btn-outline-light rounded-0 fw-bold text-muted"
-                href="{{ route('pages.show.category', ['name' => $product->category->slug]) }}">
-                <small>
-                    <i class="fa {{ $product->category->icon }}" aria-hidden="true"></i> {{ $product->category->name }}
-                </small>
-            </a>
-            <span class="bg-white rounded-0 align-middle px-2">
-                <small>
-                    <i class="fa fa-chevron-right text-muted" aria-hidden="true"></i>
-                </small>
-            </span>
             <a class="btn btn-outline-light active rounded-0 fw-bold text-muted" href="{{ request()->fullUrl() }}">
                 <small>
                     <i class="fa fa-th-large" aria-hidden="true"></i>
@@ -131,20 +120,6 @@
                                 </div>
                             </div>
                         </div>
-                        <hr class="border-1 border-bottom border-secondary-subtle">
-                        <p class="card-text fw-bold mb-1">
-                            Kategori :
-                            <a href="" class="text-decoration-none">
-                                <i class="fa {{ $product->category->icon }}"
-                                    aria-hidden="true"></i>{{ $product->category->name }}
-                            </a>
-                        </p>
-                        <p class="card-text fw-bold">
-                            Brand :
-                            <a href="" class="text-decoration-none">
-                                {{ $product->brand->name }}
-                            </a>
-                        </p>
                         <hr class="border-1 border-bottom border-secondary-subtle">
                         <p class="card-text fw-bold">
                             Stock :

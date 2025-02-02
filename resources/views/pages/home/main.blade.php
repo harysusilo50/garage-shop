@@ -106,7 +106,7 @@
             @endforeach
         </div>
     </div>
-    <section id="brands" class="clients section bg-white py-4">
+    {{-- <section id="brands" class="clients section bg-white py-4">
         <!-- Section Title -->
         <div class="container section-title text-center mb-4">
             <h2>Didukung Oleh Brand Ternama</h2>
@@ -161,7 +161,7 @@
 
         </div>
 
-    </section>
+    </section> --}}
 @endsection
 @section('js')
     <script>

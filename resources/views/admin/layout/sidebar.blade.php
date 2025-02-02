@@ -24,7 +24,7 @@
                         <span>User</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link rounded-0 {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? '' : 'collapsed text-black' }}"
                         data-bs-target="#brand-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-tags"></i><span>Brand</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -39,8 +39,8 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item">
+                </li> --}}
+                {{-- <li class="nav-item">
                     <a class="nav-link rounded-0 {{ Request::is('admin/category') || Request::is('admin/category/*') ? '' : 'collapsed text-black' }}"
                         data-bs-target="#category-nav" data-bs-toggle="collapse" href="#">
                         <i class="bi bi-diagram-2"></i><span>Category</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -55,7 +55,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
             @endif
             @if (Auth::user()->role == 'superadmin' ||
                     Auth::user()->role == 'admin_toko' ||
@@ -81,18 +81,18 @@
                                 <i class="bi bi-circle"></i><span>Kelola Stock Product</span>
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a class="{{ Request::is('admin/product-stock-report') ? 'active' : '' }}"
                                 href="{{ route('product.stock.report') }}">
                                 <i class="bi bi-circle"></i><span>Laporan Stock Product</span>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link rounded-0 {{ Request::is('admin/order') || Request::is('admin/order/*') ? '' : 'collapsed text-black' }}"
                         data-bs-target="#order-nav" data-bs-toggle="collapse" href="#">
-                        <i class="bi bi-shop"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
+                        <i class="bi bi-shop"></i><span>Pesanan</span><i class="bi bi-chevron-down ms-auto"></i>
                     </a>
                     <ul id="order-nav"
                         class="nav-content bg-light {{ Request::is('admin/order') || Request::is('admin/order/*') ? '' : 'collapse bg-light' }}"
@@ -106,7 +106,7 @@
                     </ul>
                 </li>
             @endif
-            @if (Auth::user()->role == 'bendahara' || Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin_kepala')
+            {{-- @if (Auth::user()->role == 'bendahara' || Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin_kepala')
                 <li class="nav-item">
                     <a class="nav-link rounded-0 {{ Request::is('admin/finance') || Request::is('admin/finance/*') ? '' : 'collapsed text-black' }}"
                         data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
@@ -123,10 +123,10 @@
                         </li>
                     </ul>
                 </li>
-            @endif
+            @endif --}}
             <li class="nav-item">
                 <a class="nav-link rounded-0 collapsed text-black" data-bs-target="#all-report" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-file-earmark-medical"></i><span>Report</span><i
+                    <i class="bi bi-file-earmark-medical"></i><span>Laporan</span><i
                         class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="all-report" class="nav-content collapse bg-white" data-bs-parent="#sidebar-nav">
@@ -134,7 +134,7 @@
                         <li>
                             <a class="{{ Request::is('admin/user') ? 'active' : '' }}"
                                 href="{{ route('admin.user.index') }}">
-                                <i class="bi bi-circle"></i><span>User Report</span>
+                                <i class="bi bi-circle"></i><span>Laporan Pengguna</span>
                             </a>
                         </li>
                     @endif
@@ -142,7 +142,7 @@
                         <li>
                             <a class="{{ Request::is('admin/finance') ? 'active' : '' }}"
                                 href="{{ route('finance.index') }}">
-                                <i class="bi bi-circle"></i><span>Financial Report</span>
+                                <i class="bi bi-circle"></i><span>Laporan Keuangan</span>
                             </a>
                         </li>
                     @endif
@@ -153,7 +153,7 @@
                         <li  class="nav-item">
                             <a class="{{ Request::is('admin/product-stock-report') ? 'active' : '' }}"
                                 href="{{ route('product.stock.report') }}">
-                                <i class="bi bi-circle"></i><span>Stock Product Report</span>
+                                <i class="bi bi-circle"></i><span>Laporan Barang Masuk-Keluar</span>
                             </a>
                         </li>
                     @endif

@@ -44,32 +44,6 @@
                                         <input name="name" type="text" class="form-control" id="fullName"
                                             placeholder="Masukan Nama Produk" value="{{ $product->name }}" required>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <label for="fullName" class="col-form-label fw-bold">Kategori
-                                            <span class="text-danger">*</span></label>
-                                        <select name="category_id" class="form-control" id="category_id" required>
-                                            <option value="" selected>- Pilih Kategori -</option>
-                                            @foreach ($category as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $product->category_id == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->name }} </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label for="fullName" class="col-form-label fw-bold">Brand
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <select name="brand_id" class="form-control" id="brand_id" required>
-                                            <option value="" selected>- Pilih Brand -</option>
-                                            @foreach ($brand as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $product->brand_id == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
                                 </div>
                                 <div class="row mb-2">
                                     {{-- <div class="col-lg-6">
@@ -359,7 +333,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $("#category_id").selectize();
-        $("#brand_id").selectize();
         $("#variant_name").selectize({
             delimiter: ",",
             persist: false,

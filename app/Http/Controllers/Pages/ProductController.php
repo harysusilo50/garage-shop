@@ -14,11 +14,11 @@ class ProductController extends Controller
 {
     public function show(Request $request, $slug)
     {
-        $product = Product::with('category', 'brand', 'variant', 'photo')->where('stock', '>', 0)->where('slug', $slug)->first();
+        $product = Product::with('brand', 'variant', 'photo')->where('stock', '>', 0)->where('slug', $slug)->first();
         $title = $product->category->name;
         $category = Category::select('name', 'slug', 'icon')->get();
         $cart = (new Cart())->total_cart();
 
-        return view('pages.product.show', compact('product', 'category', 'title', 'cart'));
+        return view('pages.product.show', compact('product', 'title', 'cart'));
     }
 }
