@@ -64,15 +64,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg mt-3 mt-lg-0">
+            <div class="col-12 col-lg-8 mt-3 mt-lg-0">
                 <div class="card border-0 rounded-0">
                     <div class="card-body p-3">
                         <h5 class="card-title">Riwayat Transaksi</span></h5>
                         <div class="d-lg-flex justify-content-lg-end mb-3 d-block">
                             <form action="{{ route('pages.profile.index', Auth::user()->hash_id) }}" method="GET">
                                 <div class="input-group my-2">
-                                    <input type="text" class="form-control rounded-0" placeholder="Cari Riwayat Pesanan" name="search"
-                                        aria-label="Search Order" value="{{ $search ?? '' }}"
+                                    <input type="text" class="form-control rounded-0" placeholder="Cari Riwayat Pesanan"
+                                        name="search" aria-label="Search Order" value="{{ $search ?? '' }}"
                                         aria-describedby="search_button" />
                                     <button class="btn btn-success rounded-0" type="submit" id="search_button">
                                         <i class="fa fa-search"></i>
@@ -121,26 +121,30 @@
                                             <td class="text-center">
                                                 @switch($item->status)
                                                     @case('pending')
-                                                        <span class="badge rounded-pill text-bg-secondary">Pending</span>
+                                                        <span class="badge rounded-pill text-bg-secondary">Menunggu
+                                                            Pembayaran</span>
                                                     @break
 
                                                     @case('process')
-                                                        <span class="badge rounded-pill text-bg-info text-white">Process</span>
+                                                        <span class="badge rounded-pill text-bg-info text-white">Sedang Dalam Proses
+                                                            Konfirmasi</span>
                                                     @break
 
                                                     @case('packing')
-                                                        <span class="badge rounded-pill text-bg-primary">Packing</span>
+                                                        <span class="badge rounded-pill text-bg-primary">Dalam Pengemasan</span>
                                                     @break
 
                                                     @case('ready')
-                                                        <span class="badge rounded-pill text-bg-warning text-white">Ready</span>
+                                                        <span class="badge rounded-pill text-bg-warning text-white">Barang Dalam
+                                                            Pengiriman</span>
                                                     @break
 
                                                     @case('done')
-                                                        <span class="badge rounded-pill text-bg-success">Done</span>
+                                                        <span class="badge rounded-pill text-bg-success">Selesai</span>
                                                     @break
 
                                                     @default
+                                                    @break
                                                 @endswitch
                                             </td>
                                             <td class="text-center" style="width: 10%">
@@ -168,7 +172,22 @@
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <div class="col-12 col-lg-8 my-2">
-                                                        @if ($value->status == 'ready' || $value->status == 'done')
+                                                        @if ($value->status == 'pending')
+                                                            <a href="{{ route('payment.index', $value->code) }}"
+                                                                target="_blank" class="btn btn-primary btn-sm my-2">Kirim
+                                                                Bukti Pembayaran <i class="fa fa-send"></i></a>
+                                                        @endif
+                                                        @if ($value->status == 'process')
+                                                            <a href="{{ $value->payment->payment_img_url }}"
+                                                                target="_blank"
+                                                                class="btn btn-secondary btn-sm my-2">Lihat
+                                                                Bukti Pembayaran <i class="fa fa-file"></i></a>
+                                                        @endif
+                                                        @if ($value->status == 'ready' || $value->status == 'done' || $value->status == 'process')
+                                                            <a href="{{ $value->payment->payment_img_url }}"
+                                                                target="_blank"
+                                                                class="btn btn-secondary btn-sm my-2">Lihat
+                                                                Bukti Pembayaran <i class="fa fa-file"></i></a>
                                                             <a href="{{ route('order.invoice', $value->code) }}"
                                                                 target="_blank" class="btn btn-success btn-sm my-2">Cetak
                                                                 Struk

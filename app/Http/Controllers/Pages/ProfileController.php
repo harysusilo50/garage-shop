@@ -31,11 +31,12 @@ class ProfileController extends Controller
 
         $search = $request->get('search');
         if ($search) {
-            $transaction = $user->transaction()->where('code', 'LIKE', "%$search%")
+            $transaction = $user->transaction()->with('order','payment')->where('code', 'LIKE', "%$search%")
                 ->orWhere('status', 'LIKE', "%$search%")->latest()->paginate(15)->withQueryString();
             return view('pages.profile.index', compact('title', 'user', 'category', 'cart', 'user_cart', 'user_transaction', 'transaction', 'search'));
         }
-        $transaction = $user->transaction()->with('order')->latest()->paginate(15)->withQueryString();
+        $transaction = $user->transaction()->with('order','payment')->latest()->paginate(15)->withQueryString();
+        
         return view('pages.profile.index', compact('title', 'user', 'category', 'cart', 'user_cart', 'user_transaction', 'transaction'));
     }
 }

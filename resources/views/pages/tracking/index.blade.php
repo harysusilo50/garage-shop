@@ -22,25 +22,25 @@
                                     <div class="col-1 text-center me-2"><i class="bi bi-clipboard text-secondary"
                                             aria-hidden="true"></i></div>
                                     <div> @switch($transaction->status)
-                                            @case('pending')
-                                                <span class="badge rounded-pill text-bg-secondary">Pending</span>
-                                            @break
+                                        @case('pending')
+                                        <span class="badge rounded-pill text-bg-secondary">Menunggu Pembayaran</span>
+                                    @break
 
-                                            @case('process')
-                                                <span class="badge rounded-pill text-bg-info text-white">Process</span>
-                                            @break
+                                    @case('process')
+                                        <span class="badge rounded-pill text-bg-info text-white">Sedang Dalam Proses Konfirmasi</span>
+                                    @break
 
-                                            @case('packing')
-                                                <span class="badge rounded-pill text-bg-primary">Packing</span>
-                                            @break
+                                    @case('packing')
+                                        <span class="badge rounded-pill text-bg-primary">Dalam Pengemasan</span>
+                                    @break
 
-                                            @case('ready')
-                                                <span class="badge rounded-pill text-bg-warning text-white">Ready</span>
-                                            @break
+                                    @case('ready')
+                                        <span class="badge rounded-pill text-bg-warning text-white">Barang Dalam Pengiriman</span>
+                                    @break
 
-                                            @case('done')
-                                                <span class="badge rounded-pill text-bg-success">Done</span>
-                                            @break
+                                    @case('done')
+                                        <span class="badge rounded-pill text-bg-success">Selesai</span>
+                                    @break
 
                                             @default
                                         @endswitch

@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth', 'middleware' => 'verified'], function () {
     Route::post('/checkout-process', [TransactionController::class, 'checkout_process'])->name('pages.checkout.process');
     Route::get('order/invoice/{id}', [TransactionController::class, 'invoice'])->name('order.invoice');
 
+    Route::get('payment/{code}', [TransactionController::class, 'payment_order'])->name('payment.index');
+    Route::post('payment-process/{transaction_id}', [TransactionController::class, 'payment_process'])->name('payment.process');
+
     Route::get('/profile/{id}', [ProfileController::class, 'show_profile'])->name('pages.profile.index');
 
     Route::get('/order-tracking', [TrackingController::class, 'index'])->name('pages.tracking');

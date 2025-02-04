@@ -73,6 +73,16 @@
 
                             <div class="row ">
                                 <div class="col-9">
+                                    <p class="fw-bold text-center">JASA PENGIRIMAN</p>
+                                </div>
+                                <div class="col-3 text-center fw-bold m-auto">
+                                    <p class="fw-bold" >Rp 10.000</p>
+                                    <input type="number" id="ongkir" class="d-none" value="10000">
+                                </div>
+                            </div>
+                            <hr class="border-1 border-bottom border-secondary-subtle">
+                            <div class="row ">
+                                <div class="col-9">
                                     <p class="fw-bold text-center">TOTAL PRICE</p>
                                 </div>
                                 <div class="col-3 text-center fw-bold m-auto">
@@ -91,8 +101,13 @@
                             </p>
                             <ul class="list-group">
                                 <li class="list-group-item bg-light border-0">
-                                    Cash On Delivery
-                                    (COD)
+                                  <select class="form-select" name="payment_method" id="payment_method" required>
+                                    <option value=""> - Pilih Metode Pembayaran - </option>
+                                    <option value="TRANSFER BANK BCA">TRANSFER BANK BCA</option>
+                                    <option value="TRANSFER BANK BRI">TRANSFER BANK BRI</option>
+                                    <option value="TRANSFER BANK MANDIRI">TRANSFER BANK MANDIRI</option>
+                                    <option value="TRANSFER BANK BNI">TRANSFER BANK BNI</option>
+                                  </select>
                                 </li>
                             </ul>
                             <hr class="border-1 border-bottom border-secondary-subtle">
@@ -130,7 +145,7 @@
                 </div>
             </div>
             <div class="col-12 col-lg-8 m-auto">
-                <button type="submit" class="btn btn-primary col-12"> Submit</button>
+                <button type="submit" class="btn btn-primary col-12"> Pesan Sekarang</button>
             </div>
         </form>
     </div>
@@ -146,6 +161,7 @@
                 var total = `Rp ${numberFormat(temp,0,0,'.')}`;
                 $('#price_list' + index).text(total);
                 total_price_val += parseInt(temp);
+                total_price_val+=10000;
                 $('#total_price').text(`Rp ${numberFormat(parseInt(total_price_val),0,0,'.')}`);
             });
         });

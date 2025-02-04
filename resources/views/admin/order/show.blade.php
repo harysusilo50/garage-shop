@@ -23,23 +23,23 @@
                                     aria-hidden="true"></i></div>
                             <div> @switch($transaction->status)
                                     @case('pending')
-                                        <span class="badge rounded-pill text-bg-secondary">Pending</span>
+                                        <span class="badge rounded-pill text-bg-secondary">Menunggu Pembayaran</span>
                                     @break
 
                                     @case('process')
-                                        <span class="badge rounded-pill text-bg-info text-white">Process</span>
+                                        <span class="badge rounded-pill text-bg-info text-white">Sedang Dalam Proses Konfirmasi</span>
                                     @break
 
                                     @case('packing')
-                                        <span class="badge rounded-pill text-bg-primary">Packing</span>
+                                        <span class="badge rounded-pill text-bg-primary">Dalam Pengemasan</span>
                                     @break
 
                                     @case('ready')
-                                        <span class="badge rounded-pill text-bg-warning text-white">Ready</span>
+                                        <span class="badge rounded-pill text-bg-warning text-white">Barang Dalam Pengiriman</span>
                                     @break
 
                                     @case('done')
-                                        <span class="badge rounded-pill text-bg-success">Done</span>
+                                        <span class="badge rounded-pill text-bg-success">Selesai</span>
                                     @break
 
                                     @default
@@ -153,21 +153,20 @@
                             @csrf
                             <input type="text" name="status" class="d-none" value="{{ $transaction->status }}">
                             @switch($transaction->status)
-                                @case('pending')
-                                    <button class="btn btn-secondary" type="submit">
-                                        Konfirmasi Pesanan
-                                    </button>
-                                @break
-
                                 @case('process')
+                                
+                                <a href="{{ $transaction->payment->payment_img_url }}"
+                                    target="_blank" class="btn btn-secondary my-2">Lihat
+                                    Bukti Pembayaran</a>
+                            
                                     <button class="btn btn-info text-white" type="submit">
-                                        Packing Pesanan
+                                        Konfirmasi Pesanan dan Packing Barang
                                     </button>
                                 @break
 
                                 @case('packing')
                                     <button class="btn btn-primary" type="submit">
-                                        Pesanan Siap
+                                        Kirim Pesanan
                                     </button>
                                 @break
 
