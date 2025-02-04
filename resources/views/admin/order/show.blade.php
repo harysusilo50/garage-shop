@@ -27,7 +27,8 @@
                                     @break
 
                                     @case('process')
-                                        <span class="badge rounded-pill text-bg-info text-white">Sedang Dalam Proses Konfirmasi</span>
+                                        <span class="badge rounded-pill text-bg-info text-white">Sedang Dalam Proses
+                                            Konfirmasi</span>
                                     @break
 
                                     @case('packing')
@@ -147,6 +148,20 @@
                 </div>
             </div>
             @if (Auth::user()->role != 'admin_kepala')
+                @if (!empty($transaction->payment))
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Bukti Pembayaran </span></h5>
+                            <p>Nama : {{ $transaction->payment->sender_name }}</p>
+                            <p>Bank : {{ $transaction->payment->bank_name }}</p>
+                            <p>No Rek : {{ $transaction->payment->no_rek }}</p>
+                            <p>Waktu : {{ $transaction->payment->format_date }}</p>
+                            <a href="{{ $transaction->payment->payment_img_url }}" target="_blank"
+                                class="btn btn-secondary my-2">Lihat
+                                Bukti Pembayaran</a>
+                        </div>
+                    </div>
+                @endif
                 <div class="card">
                     <div class="card-body py-3 d-flex justify-content-around">
                         <form action="{{ route('order.change-status', $transaction->id) }}" method="POST">
@@ -154,11 +169,6 @@
                             <input type="text" name="status" class="d-none" value="{{ $transaction->status }}">
                             @switch($transaction->status)
                                 @case('process')
-                                
-                                <a href="{{ $transaction->payment->payment_img_url }}"
-                                    target="_blank" class="btn btn-secondary my-2">Lihat
-                                    Bukti Pembayaran</a>
-                            
                                     <button class="btn btn-info text-white" type="submit">
                                         Konfirmasi Pesanan dan Packing Barang
                                     </button>

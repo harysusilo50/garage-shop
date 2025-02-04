@@ -47,7 +47,7 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('order', 'user')->findOrFail($id);
+        $transaction = Transaction::with('order', 'user','payment')->findOrFail($id);
         return view('admin.order.show', compact('transaction'));
     }
 

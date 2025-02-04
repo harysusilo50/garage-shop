@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
         $stock_habis = Product::where('stock', '<', 5)->count();
 
-        $pending_order = Transaction::where('status', 'pending')
+        $pending_order = Transaction::where('status', 'process')
             ->latest()
             ->paginate(15)
             ->withQueryString();
