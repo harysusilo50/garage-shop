@@ -162,10 +162,10 @@
                             <input type="number" class="d-none" name="product_id" value="{{ $product->id }}"
                                 required>
                             <div class="d-lg-flex text-center justify-content-lg-around">
-                                <a href="{{ route('pages.cart.store', $product->id) }}"
-                                    class="btn btn-outline-warning btn-lg col-12 col-lg-5 mb-2">Tambah ke
+                                <button type="button"
+                                    class="btn btn-outline-warning btn-lg col-12 col-lg-5 mb-2" id="addToCart">Tambah ke
                                     Keranjang
-                                </a>
+                            </button>
                                 <button class="btn btn-primary btn-lg col-12 col-lg-5 mb-2" type="submit">
                                     Beli Sekarang</button>
                             </div>
@@ -223,6 +223,11 @@
             var qty = $('#qty').val();
             qty++;
             $('#qty').val(qty);
+        });
+
+        $('#addToCart').click(function (e) { 
+            let url = "{{ url('/') }}"+"/cart/store/"+"{{ $product->id }}"+"?qty="+$('#qty').val();
+            window.location.replace(url);
         });
     </script>
 @endsection

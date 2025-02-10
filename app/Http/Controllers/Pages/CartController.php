@@ -15,35 +15,54 @@ class CartController extends Controller
     public function index()
     {
         $title = 'Cart';
-        $category = Category::select('name', 'slug', 'icon')->get();
-        $cart = Cart::where('user_id', Auth::id())->with(['product' => function ($value) {
-            $value->where('is_active', 'yes')->where('stock', '>', 0);
-        }])->get();
-        return view('pages.home.cart', compact('title', 'category', 'cart'));
+        $cart = Cart::where('user_id', Auth::id())
+            ->with([
+                'product' => function ($value) {
+                    $value->where('is_active', 'yes')->where('stock', '>', 0);
+                },
+            ])
+            ->get();
+        return view('pages.home.cart', compact('title', 'cart'));
     }
 
-    public function add($product_id)
+    public function add(Request $request, $product_id)
     {
         try {
-            $check = Product::find($product_id);
-            if ($check) {
-                $data = new Cart();
-                $data->product_id = $product_id;
-                $data->user_id = Auth::id();
-                $data->save();
-                if ($data) {
-                    Alert::success('success', 'Berhasil menambah produk ke dalam keranjang!');
-                    return redirect()->back();
-                } else {
-                    Alert::error('error', 'Gagal menambah produk ke dalam keranjang!');
-                    return redirect()->back();
-                }
+            // Cek apakah produk ada di database
+            $product = Product::find($product_id);
+            if (!$product) {
+                Alert::error('error', 'Produk tidak ditemukan!');
+                return redirect()->back();
             }
+    
+            // Cek apakah produk sudah ada di keranjang
+            $cart = Cart::where(['product_id' => $product_id, 'user_id' => Auth::id()])->first();
+    
+            if ($cart) {
+                // Jika sudah ada, update qty
+                $cart->qty += $request->qty ?? 1;
+            } else {
+                // Jika belum ada, buat entri baru
+                $cart = new Cart();
+                $cart->qty = $request->qty ?? 1;
+                $cart->product_id = $product_id;
+                $cart->user_id = Auth::id();
+            }
+    
+            // Simpan data ke database
+            if ($cart->save()) {
+                Alert::success('success', 'Berhasil menambah produk ke dalam keranjang!');
+            } else {
+                Alert::error('error', 'Gagal menambah produk ke dalam keranjang!');
+            }
+    
+            return redirect()->back();
         } catch (\Throwable $th) {
             Alert::error('error', $th->getMessage());
             return redirect()->back();
         }
     }
+    
 
     public function destroy($id)
     {

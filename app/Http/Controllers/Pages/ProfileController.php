@@ -22,7 +22,6 @@ class ProfileController extends Controller
             abort('403');
         }
         $title = 'Profile';
-        $category = Category::select('name', 'slug', 'icon')->get();
         $cart = (new Cart())->total_cart();
 
         $user = User::with('transaction',)->findOrFail($check[0]);
@@ -31,12 +30,12 @@ class ProfileController extends Controller
 
         $search = $request->get('search');
         if ($search) {
-            $transaction = $user->transaction()->with('order','payment')->where('code', 'LIKE', "%$search%")
+            $transaction = $user->transaction()->with('order','payment','shipping')->where('code', 'LIKE', "%$search%")
                 ->orWhere('status', 'LIKE', "%$search%")->latest()->paginate(15)->withQueryString();
-            return view('pages.profile.index', compact('title', 'user', 'category', 'cart', 'user_cart', 'user_transaction', 'transaction', 'search'));
+            return view('pages.profile.index', compact('title', 'user', 'cart', 'user_cart', 'user_transaction', 'transaction', 'search'));
         }
-        $transaction = $user->transaction()->with('order','payment')->latest()->paginate(15)->withQueryString();
+        $transaction = $user->transaction()->with('order','payment','shipping')->latest()->paginate(15)->withQueryString();
         
-        return view('pages.profile.index', compact('title', 'user', 'category', 'cart', 'user_cart', 'user_transaction', 'transaction'));
+        return view('pages.profile.index', compact('title', 'user', 'cart', 'user_cart', 'user_transaction', 'transaction'));
     }
 }

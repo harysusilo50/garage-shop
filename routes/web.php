@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth', 'middleware' => 'verified'], function () {
     Route::post('/checkout', [TransactionController::class, 'checkout'])->name('pages.checkout.index');
     Route::post('/checkout-process', [TransactionController::class, 'checkout_process'])->name('pages.checkout.process');
     Route::get('order/invoice/{id}', [TransactionController::class, 'invoice'])->name('order.invoice');
+    
+    Route::get('rongkir/alamat-search', [TransactionController::class, 'cariAlamatOngkir'])->name('rongkir.search');
+    Route::get('rongkir/calculate', [TransactionController::class, 'calculateOngkir'])->name('rongkir.calculate');
 
     Route::get('payment/{code}', [TransactionController::class, 'payment_order'])->name('payment.index');
     Route::post('payment-process/{transaction_id}', [TransactionController::class, 'payment_process'])->name('payment.process');

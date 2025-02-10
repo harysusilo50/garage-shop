@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\ShippingCost;
 use App\Models\Transaction;
 use App\Models\VariantProduct;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -19,6 +20,7 @@ class TransactionController extends Controller
 {
     public function checkout(Request $request)
     {
+        
         try {
             $this->validate(
                 $request,
@@ -34,16 +36,15 @@ class TransactionController extends Controller
             );
 
             if (!is_array($request->product_id)) {
-                $product = Product::with('variant')->where('id', $request->product_id)->get();
+                $product = Product::where('id', $request->product_id)->get();
                 $qty[] = $request->qty;
-                $variant = $request->variant_id;
-                return view('pages.checkout.index', compact('product', 'qty', 'variant'));
+                return view('pages.checkout.index', compact('product', 'qty',));
             }
 
-            $cart = Cart::where('user_id', Auth::id())
+            $cart = Cart::where('user_id', Auth::id())->whereIn('product_id', $request->product_id)
                 ->with([
                     'product' => function ($value) {
-                        $value->where('is_active', 'yes')->with('variant');
+                        $value->where('is_active', 'yes');
                     },
                 ])
                 ->get();
@@ -52,8 +53,7 @@ class TransactionController extends Controller
                 return $element->product;
             });
             $qty = $request->qty;
-            $variant = $request->variant_id;
-            return view('pages.checkout.index', compact('product', 'qty', 'variant'));
+            return view('pages.checkout.index', compact('product', 'qty'));
         } catch (\Throwable $th) {
             Alert::error('error', $th->getMessage());
             return redirect()->back();
@@ -62,7 +62,6 @@ class TransactionController extends Controller
 
     public function checkout_process(Request $request)
     {
-        // dd($request);
         DB::beginTransaction();
         try {
             $this->validate(
@@ -70,23 +69,20 @@ class TransactionController extends Controller
                 [
                     'product_id' => 'required|array',
                     'qty' => 'required|min:1|array',
-                    'variant_id' => 'required|array',
                 ],
                 [
                     'product_id.required' => 'Produk harus diisi!',
                     'qty.required' => 'Jumlah Produk harus diisi!',
                     'qty.required' => 'Jumlah Produk minimal 1!',
                     'qty.required' => 'Jumlah Produk minimal 1!',
-                    'variant_id.required' => 'Variant harus diisi',
                 ],
             );
 
-            if (!is_array($request->product_id) && !is_array($request->qty) && !is_array($request->variant_id)) {
+            if (!is_array($request->product_id) && !is_array($request->qty)) {
                 Alert::error('error', 'Masukan format dengan benar');
                 return redirect()->back();
             }
             $product_name = [];
-            $variant = [];
             // $qty = array();
             $array_price = [];
             $total_price = 0;
@@ -100,10 +96,6 @@ class TransactionController extends Controller
                 }
 
                 $product_name[$key] = $product->name;
-                if ($request->variant_id[$key] != 'no_variant') {
-                    $variant = VariantProduct::findOrFail($request->variant_id[$key]);
-                    $product_name[$key] = $product->name . '[' . $variant->name . ']';
-                }
 
                 $price = $product->discount_price ?? $product->price;
                 $price = $price * $request->qty[$key];
@@ -113,13 +105,14 @@ class TransactionController extends Controller
 
             $transaction = new Transaction();
             $transaction->user_id = Auth::id();
-            $transaction->code = 'INV' . date('Ymd') . 'ETF' . rand(0, 999999);
+            $transaction->code = 'NOTA' . date('Ymd') . 'TRX' . rand(0, 999999);
             $transaction->status = 'pending';
             $transaction->payment_method = $request->payment_method;
             $transaction->date = now();
-            $transaction->total_price = $total_price + 10000;
+            $transaction->total_price = $total_price + intval($request->service);
             $transaction->save();
 
+            $product_id_cart = [];
             for ($key = 0; $key < count($request->product_id); $key++) {
                 $order = new Order();
                 $order->product_id = $request->product_id[$key];
@@ -128,9 +121,19 @@ class TransactionController extends Controller
                 $order->qty = $request->qty[$key];
                 $order->price = $array_price[$key];
                 $order->save();
+
+                $product_id_cart[] = $request->product_id[$key];
             }
 
-            Cart::where('user_id', Auth::id())->delete();
+            $shipping = new ShippingCost();
+            $shipping->transaction_id = $transaction->id;
+            $shipping->address = $request->address_full;
+            $shipping->courier = $request->kurir;
+            $shipping->service = '-';
+            $shipping->cost = intval($request->service);
+            $shipping->save();
+
+            Cart::where('user_id', Auth::id())->whereIn('product_id',$product_id_cart)->delete();
             DB::commit();
             Alert::success('success', 'Pesanan berhasil dibuat, silakan lakukan pembayaran!');
             return redirect()->route('payment.index', $transaction->code);
@@ -144,7 +147,7 @@ class TransactionController extends Controller
 
     public function payment_order(Request $request, $code)
     {
-        $data = Transaction::with('order', 'user')->where('code', $code)->firstOrFail();
+        $data = Transaction::with('order', 'user','shipping')->where('code', $code)->firstOrFail();
         return view('pages.checkout.payment', compact('data'));
     }
 
@@ -179,8 +182,67 @@ class TransactionController extends Controller
 
     public function invoice($id)
     {
-        $data = Transaction::with('order', 'user')->where('code', $id)->firstOrFail();
+        $data = Transaction::with('order', 'user','shipping')->where('code', $id)->firstOrFail();
         $pdf = Pdf::loadView('admin.order.invoice', ['data' => $data]);
         return $pdf->stream('invoice' . $data->code . '_' . now() . '.pdf');
+    }
+
+    public function cariAlamatOngkir(Request $request)
+    {
+        $alamat = $request->search;
+
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://rajaongkir.komerce.id/api/v1/destination/domestic-destination?search='.urlencode($alamat),
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+            'key: '.env('RAJAONGKIR_KEY'),
+            'Accept: application/json'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        $data = json_decode($response);
+        return $data->data;
+    }
+
+    public function calculateOngkir(Request $request)
+    {
+        $origin = '17482';
+        $destination = $request->destination_id;
+        $kurir = $request->kurir;
+        
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS => 'courier='.$kurir.'&destination='.$destination.'&origin='.$origin.'&weight=500',
+          CURLOPT_HTTPHEADER => array(
+            'key: '.env('RAJAONGKIR_KEY'),
+            'Accept: application/json'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        $data = json_decode($response);
+        return $data->data;
     }
 }

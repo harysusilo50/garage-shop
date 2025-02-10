@@ -90,7 +90,7 @@
         </tr>
         <tr class="m-0">
             <td width="33%" class="" style="border: 0">
-                {{ $data->user->address }}
+                {{ $data->shipping->address ?? '' }}
             </td>
             <td width="33%" style="border: 0">
 
@@ -128,6 +128,10 @@
                     </td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="3" class="text-center fw-bold">Jasa Pengiriman</td>
+                <td class="fw-bold">Rp {{ $data->shipping->format_cost }}</td>
+            </tr>
             <tr>
                 <td colspan="3" class="text-center fw-bold">Total Harga</td>
                 <td class="fw-bold">Rp {{ $data->format_total_price }}</td>

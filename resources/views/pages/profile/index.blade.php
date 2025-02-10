@@ -222,6 +222,14 @@
                                                                     @endforeach
                                                                     <tr>
                                                                         <td colspan="3" class="text-center fw-bold">
+                                                                            Jasa Pengiriman
+                                                                        </td>
+                                                                        <td class="fw-bold">Rp
+                                                                            {{ $value->shipping->format_cost ?? '' }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="3" class="text-center fw-bold">
                                                                             Total Harga
                                                                         </td>
                                                                         <td class="fw-bold">Rp
@@ -264,12 +272,10 @@
                                                                     </div>
                                                                     <div>{{ $value->user->phone }}</div>
                                                                 </li>
-                                                                <li
-                                                                    class="list-group-item border-0 pt-0 pb-1 px-1 d-flex bg-light border-0">
-                                                                    <div class="col-1 text-center me-2"><i
-                                                                            class="fa fa-map-marker text-secondary"
+                                                                <li class="list-group-item border-0 pt-0 pb-1 px-1 d-flex bg-light border-0">
+                                                                    <div class="col-1 text-center me-2"><i class="fa fa-map-marker text-secondary"
                                                                             aria-hidden="true"></i></div>
-                                                                    <div>{{ $value->user->address }}</div>
+                                                                    <div>{{ $value->shipping->address ?? ''}}</div>
                                                                 </li>
                                                             </ul>
                                                             <hr class="border-1 border-bottom border-secondary-subtle">

@@ -37,7 +37,8 @@
                         <div
                             class="d-none d-lg-block col-lg-3 text-end text-white d-flex justify-content-between align-items-center">
                             @if (Auth::guest())
-                                <a href="{{ route('login') }}" class="btn btn-outline-light rounded-0 fw-medium">Masuk <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+                                <a href="{{ route('login') }}" class="btn btn-outline-light rounded-0 fw-medium">Login <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+                                <a href="{{ route('register') }}" class="btn btn-light rounded-0 fw-medium">Register <i class="fa fa-user-plus" aria-hidden="true"></i></a>
                             @else
                                 <div class="btn-group">
                                     <button type="button"

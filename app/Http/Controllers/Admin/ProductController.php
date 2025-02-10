@@ -36,9 +36,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $brand = Brand::select('id', 'name')->get();
-        $category = Category::select('id', 'name')->get();
-        return view('admin.product.create', compact('brand', 'category'));
+        return view('admin.product.create');
     }
 
     public function store(Request $request)
@@ -110,15 +108,7 @@ class ProductController extends Controller
                 $stock->save();
 
                 file_put_contents($file1, $image_base641);
-                if ($request->variant_name) {
-                    $array = explode(',', $request->variant_name);
-                    foreach ($array as $item) {
-                        $data = new VariantProduct();
-                        $data->product_id = $product->id;
-                        $data->name = $item;
-                        $data->save();
-                    }
-                }
+
                 foreach ($request->image_gallery as $key => $value) {
                     $data_image_gallery = new PhotoProduct();
                     $image_parts = explode(";base64,", $value);
@@ -156,10 +146,8 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $brand = Brand::select('id', 'name')->get();
-        $category = Category::select('id', 'name')->get();
-        $product = Product::lockForUpdate()->with('photo', 'variant')->findOrFail($id);
-        return view('admin.product.edit', compact('brand', 'category', 'product'));
+        $product = Product::lockForUpdate()->with('photo')->findOrFail($id);
+        return view('admin.product.edit', compact('product'));
     }
 
     public function update(Request $request, $id)
@@ -213,15 +201,6 @@ class ProductController extends Controller
             $product->save();
 
             if ($product) {
-                if ($request->variant_name) {
-                    $array = explode(',', $request->variant_name);
-                    foreach ($array as $item) {
-                        $data = new VariantProduct();
-                        $data->product_id = $product->id;
-                        $data->name = $item;
-                        $data->save();
-                    }
-                }
                 if ($request->image_gallery) {
                     foreach ($request->image_gallery as $key => $value) {
                         $data_image_gallery = new PhotoProduct();
